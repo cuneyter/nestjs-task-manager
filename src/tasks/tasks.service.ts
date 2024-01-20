@@ -56,6 +56,7 @@ export class TasksService {
   }
 
   async deleteTaskById(id: string): Promise<void> {
+    // Preferred method is `delete` over `remove` because it is more efficient
     const result = await this.tasksRepository.delete({ id });
 
     if (result.affected === 0) {
@@ -70,9 +71,10 @@ export class TasksService {
     // await this.tasksRepository.remove(task);
   }
 
-  // updateTaskStatus(id: string, status: TaskStatus): Task {
-  //   const task = this.getTaskById(id);
-  //   task.status = status;
-  //   return task;
-  // }
+  async updateTaskStatus(id: string, status: TaskStatus): Promise<Task> {
+    const task: Task = await this.getTaskById(id);
+
+    task.status = status;
+    return await this.tasksRepository.save(task);
+  }
 }
