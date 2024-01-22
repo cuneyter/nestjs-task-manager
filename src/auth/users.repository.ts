@@ -25,7 +25,9 @@ export class UsersRepository extends Repository<User> {
   async createUser(authCredentialsDto: AuthCredentialsDto): Promise<void> {
     const { username, password } = authCredentialsDto;
 
+    // We are using salt to prevent rainbow table attacks
     const salt = await bcrypt.genSalt();
+    // We are using hash to prevent brute force attacks
     const hashedPassword = await bcrypt.hash(password, salt);
 
     const user: User = this.create({
